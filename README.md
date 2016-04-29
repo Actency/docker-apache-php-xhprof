@@ -1,6 +1,6 @@
 # About this repo
 
-This is the Actency Docker images for apache-php with xhprof.
+This is the Actency Docker **Drupal** optimized images for apache-php with xhprof.
 
 Available tags are:
 - 5.6, latest ([5.6/Dockerfile](https://github.com/Actency/docker-apache-php-xhprof/tree/master/5.6/Dockerfile))
