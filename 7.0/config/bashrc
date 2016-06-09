@@ -1,0 +1,4 @@
+alias ll='ls -al'
+alias drush='sudo -u www-data drush'
+alias git='sudo -u www-data git'
+alias ssh='sudo -u www-data ssh'
