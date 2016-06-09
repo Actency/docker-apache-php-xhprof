@@ -71,12 +71,26 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 # Install PECL packages
 COPY docker-php-pecl-install /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-php-pecl-install
-# RUN docker-php-pecl-install \
-#   mongo-1.6.12
+RUN docker-php-pecl-install \
+  mongodb
 
 RUN pecl install yaml-beta && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
 
 COPY core/memcached.conf /etc/memcached.conf
+
+RUN \
+cd /tmp && git clone https://github.com/tideways/php-profiler-extension.git && cd /tmp/php-profiler-extension && phpize7.0 && ./configure && make && make install; \
+echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini; \
+
+git clone https://github.com/perftools/xhgui.git /var/www/xhgui; \
+chmod -R 0777 /var/www/xhgui/cache; \
+cd /var/www/xhgui/ && php install.php; \
+sed -i -e '$a\
+[xhgui]\
+auto_prepend_file = "/var/www/xhgui/external/header.php"' \
+/usr/local/etc/php/php.ini
+
+COPY core/xhgui/config.php /var/www/xhgui/config/
 
 RUN rm -rf /var/www/html && \
   mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && \
